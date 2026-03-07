@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProjects, createProject, getSessions, createSession, deleteSession, getDatasets, deleteDataset } from "../services/api";
 import UploadDataset from "./UploadDataset";
-import { PlusCircle, MessageSquare, Trash2, Database, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { PlusCircle, MessageSquare, Trash2, Database, CheckCircle, XCircle, AlertTriangle, X } from "lucide-react";
 
 /* ─── Tiny Toast Component ─────────────────────────────── */
 function Toast({ toasts }) {
@@ -211,9 +211,9 @@ export default function Sidebar({
 
       {/* Sidebar Container */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 md:relative w-80 bg-[#0f172a] border-r border-[#1e293b] flex flex-col text-white h-full flex-shrink-0
-        transform transition-transform duration-300 ease-in-out
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        fixed inset-y-0 left-0 z-50 w-80 bg-[#0f172a] border-r border-[#1e293b] flex flex-col text-white h-full flex-shrink-0
+        transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0
+        ${isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
       `}>
 
         {/* Header */}
@@ -221,13 +221,22 @@ export default function Sidebar({
           <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
             DataIntel
           </h1>
-          <button
-            onClick={() => navigate("/")}
-            title="Back to Home"
-            className="text-gray-500 hover:text-indigo-400 transition text-xs flex items-center gap-1"
-          >
-            🏠 Home
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/")}
+              title="Back to Home"
+              className="text-gray-500 hover:text-indigo-400 transition text-xs flex items-center gap-1"
+            >
+              🏠
+            </button>
+            {/* Mobile Close Button */}
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="md:hidden text-gray-500 hover:text-white p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 space-y-8">

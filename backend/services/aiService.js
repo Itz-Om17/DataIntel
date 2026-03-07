@@ -11,9 +11,11 @@ const httpAgent = new http.Agent({
 
 const aiAxios = axios.create({
     baseURL: AI_BASE_URL,
-    timeout: 180000, // 3 minute request timeout (Llama is slow)
+    timeout: 180000,
     httpAgent
 });
+
+console.log("AI Service Base URL:", AI_BASE_URL);
 
 async function generateSQL(schema, question, tableName) {
     const response = await aiAxios.post(
@@ -24,6 +26,7 @@ async function generateSQL(schema, question, tableName) {
             table_name: tableName
         }
     );
+    console.log("AI SQL Response Received");
 
     return response.data.sql;
 }

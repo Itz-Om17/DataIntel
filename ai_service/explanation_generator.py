@@ -21,7 +21,7 @@ def format_result_as_table(sql_result):
     row_lines = [" | ".join(r) for r in rows]
     return "\n".join([header_line, separator] + row_lines)
 
-def generate_explanation(question, sql_result):
+async def generate_explanation(question, sql_result):
 
     data_table = format_result_as_table(sql_result)
 
@@ -44,7 +44,7 @@ Fill in this JSON template exactly. Output ONLY the JSON, nothing else:
     "explanation": "FILL: 2-3 sentences with ALL categories, their exact counts and percentages from the table."
 }}"""
 
-    raw = call_llama(prompt)
+    raw = await call_llama(prompt)
 
     big_number = extract_field(raw, "big_number")
     answer = extract_field(raw, "answer")

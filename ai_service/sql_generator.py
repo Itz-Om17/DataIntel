@@ -1,6 +1,6 @@
 from model import call_llama
 
-def generate_sql(schema, question, table_name):
+async def generate_sql(schema, question, table_name):
 
     prompt = f"""
 You are a professional data analyst.
@@ -23,6 +23,6 @@ Question:
 {question}
 """
 
-    sql = call_llama(prompt)
+    sql = await call_llama(prompt)
 
     return sql.strip()

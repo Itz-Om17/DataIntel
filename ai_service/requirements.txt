@@ -1,6 +1,8 @@
 fastapi
 uvicorn
-requests
-pydantic
 groq
 python-dotenv
+pydantic
+pydantic-settings
+axios
+requests

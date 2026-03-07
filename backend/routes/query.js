@@ -139,6 +139,7 @@ router.post("/", authMiddleware, async (req, res) => {
         ============================== */
 
         const startTime = Date.now();
+        console.log("Executing SQL:", generatedSQL);
         const [rows] = await connection.query(generatedSQL);
         const executionTime = (Date.now() - startTime) / 1000;
 
@@ -146,7 +147,22 @@ router.post("/", authMiddleware, async (req, res) => {
            6️⃣ Generate Explanation
         ============================== */
 
-        const explanation = await generateExplanation(question, rows);
+        let explanation = "";
+        try {
+            explanation = await generateExplanation(question, rows);
+            // 🔥 Parse the JSON string from AI if applicable
+            try {
+                const parsed = JSON.parse(explanation);
+                if (parsed.answer || parsed.explanation) {
+                    explanation = parsed;
+                }
+            } catch (e) {
+                // Not JSON, keep as string
+            }
+        } catch (aiErr) {
+            console.error("Explanation Generator Failed:", aiErr);
+            explanation = "Successfully executed the query, but failed to generate a natural language explanation.";
+        }
 
         /* ==============================
            7️⃣ Log Query + Save History (skip if client aborted)

@@ -204,7 +204,7 @@ export default function Landing({ token }) {
                         <span className="l2">data.</span>
                     </h1>
                     <p className="li-sub">
-                        Ask any question in plain English. Get instant answers, SQL transparency, and beautiful charts — powered by local Llama 3 AI, zero cloud dependency.
+                        Ask any question in plain English. Get instant answers, SQL transparency, and beautiful charts — powered by Llama 3 (powered by Groq), ultra-fast cloud AI.
                     </p>
                     <div className="li-actions">
                         <button className="li-btnprimary" onClick={handleEnterApp}>⚡ Analyse Your Data</button>
@@ -252,7 +252,7 @@ export default function Landing({ token }) {
                     {[
                         { val: "7,043+", label: "Customer Records" },
                         { val: "Any CSV", label: "Instant Schema Detection" },
-                        { val: "0", label: "Cloud Calls — 100% Local" },
+                        { val: "0", label: "Local Latency — Powered by Groq" },
                         { val: "<2s", label: "Avg. Query Response" },
                     ].map(s => (
                         <div key={s.label} style={{ textAlign: "center" }}>

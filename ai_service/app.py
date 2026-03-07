@@ -20,19 +20,18 @@ class ExplanationRequest(BaseModel):
     result: list
 
 @app.post("/generate-sql")
-def generate_sql_endpoint(req: SQLRequest):
-    print(req.db_schema)
+async def generate_sql_endpoint(req: SQLRequest):
     try:
-        sql = generate_sql(req.db_schema, req.question, req.table_name)
+        sql = await generate_sql(req.db_schema, req.question, req.table_name)
         return {"sql": sql}
     except Exception as e:
         print(f"SQL generation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/generate-explanation")
-def generate_explanation_endpoint(req: ExplanationRequest):
+async def generate_explanation_endpoint(req: ExplanationRequest):
     try:
-        explanation = generate_explanation(req.question, req.result)
+        explanation = await generate_explanation(req.question, req.result)
         return {"explanation": explanation}
     except Exception as e:
         print(f"Explanation generation error: {e}")
