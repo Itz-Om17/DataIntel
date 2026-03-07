@@ -29,6 +29,9 @@ router.post('/', upload.single('file'), async (req, res) => {
             return res.status(400).json({ error: "No file uploaded" });
         }
 
+        const projectId = req.body.projectId || null;
+        const chatId = req.body.chatId || null;
+
         const filePath = req.file.path;
         const tableName = `dataset_${uuidv4().replace(/-/g, '')}`;
 
@@ -77,7 +80,7 @@ router.post('/', upload.single('file'), async (req, res) => {
             let sampleValues = null;
 
             const isNumeric = uniqueValues.length > 0 &&
-                              uniqueValues.every(v => !isNaN(v));
+                uniqueValues.every(v => !isNaN(v));
 
             if (isNumeric) {
                 dataType = "DOUBLE";
@@ -152,9 +155,9 @@ router.post('/', upload.single('file'), async (req, res) => {
         ========================================= */
 
         const [datasetResult] = await connection.query(
-            `INSERT INTO datasets (name, table_name)
-             VALUES (?, ?)`,
-            [req.file.originalname, tableName]
+            `INSERT INTO datasets (name, table_name, project_id, chat_id)
+             VALUES (?, ?, ?, ?)`,
+            [req.file.originalname, tableName, projectId, chatId]
         );
 
         const datasetId = datasetResult.insertId;

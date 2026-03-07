@@ -2,19 +2,21 @@ const express = require("express");
 const pool = require("../services/mysqlService");
 const validateSQL = require("../middleware/sqlValidator");
 const { generateSQL, generateExplanation } = require("../services/aiService");
+const authMiddleware = require("../middleware/authMiddleware");
+const ChatHistory = require("../models/ChatHistory");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
 
     const connection = await pool.getConnection();
 
     try {
-        const { datasetId, question } = req.body;
+        const { datasetId, question, sessionId } = req.body;
 
-        if (!datasetId || !question) {
+        if (!datasetId || !question || !sessionId) {
             return res.status(400).json({
-                error: "datasetId and question are required."
+                error: "datasetId, question, and sessionId are required."
             });
         }
 
@@ -79,6 +81,26 @@ router.post("/", async (req, res) => {
         // 🔥 Clean SQL
         generatedSQL = generatedSQL.trim();
 
+        if (generatedSQL.toLowerCase().includes("please enter any valid query")) {
+
+            // 🔥 Save to MongoDB History Even for Rejections
+            const history = new ChatHistory({
+                userId: req.user.id,
+                datasetId,
+                question,
+                sqlGenerated: null,
+                aiResponse: "Please enter any valid query related to the dataset.",
+            });
+            await history.save();
+
+            return res.json({
+                answer: "Please enter any valid query related to the dataset.",
+                sql: null,
+                data: [],
+                executionTime: 0
+            });
+        }
+
         if (generatedSQL.includes("SELECT")) {
             generatedSQL = generatedSQL.substring(
                 generatedSQL.indexOf("SELECT")
@@ -127,8 +149,16 @@ router.post("/", async (req, res) => {
         const explanation = await generateExplanation(question, rows);
 
         /* ==============================
-           7️⃣ Log Query
+           7️⃣ Log Query + Save History (skip if client aborted)
         ============================== */
+
+        // Only reliable check: did the client's socket get destroyed?
+        const clientGone = req.socket?.destroyed || res.writableEnded;
+        if (clientGone) {
+            console.log("Client disconnected — skipping DB save");
+            connection.release();
+            return;
+        }
 
         await connection.query(
             `INSERT INTO query_logs 
@@ -136,6 +166,28 @@ router.post("/", async (req, res) => {
              VALUES (?, ?, ?, ?)`,
             [datasetId, question, generatedSQL, executionTime]
         );
+
+        /* ==============================
+           7.5️⃣ Save to MongoDB
+        ============================== */
+        const history = new ChatHistory({
+            userId: req.user.id,
+            sessionId,
+            datasetId,
+            question,
+            sqlGenerated: generatedSQL,
+            aiResponse: explanation,
+            queryData: rows
+        });
+        await history.save();
+
+        // Update Session Title if it is "New Chat"
+        const ChatSession = require("../models/ChatSession");
+        const session = await ChatSession.findById(sessionId);
+        if (session && session.title === "New Chat") {
+            session.title = question.substring(0, 30) + "...";
+            await session.save();
+        }
 
         /* ==============================
            8️⃣ Return Response

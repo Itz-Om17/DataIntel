@@ -45,13 +45,27 @@ function validateSQL(sql, allowedTable, allowedColumns) {
         const usedColumns = new Set();
         extractColumnsDeep(ast, usedColumns);
 
+        // 🔥 Extract aliases
+        const aliases = new Set();
+        if (ast.columns && Array.isArray(ast.columns)) {
+            ast.columns.forEach(col => {
+                if (col.as) {
+                    let alias = col.as;
+                    if (typeof alias === 'string') {
+                        alias = alias.replace(/^[`'"]|[`'"]$/g, '');
+                        aliases.add(alias.toLowerCase());
+                    }
+                }
+            });
+        }
+
         // 🔥 Case-insensitive column validation
         const normalizedAllowed = allowedColumns.map(col => col.toLowerCase());
 
         for (let col of usedColumns) {
             const normalizedCol = col.toLowerCase();
 
-            if (normalizedCol !== "*" && !normalizedAllowed.includes(normalizedCol)) {
+            if (normalizedCol !== "*" && !normalizedAllowed.includes(normalizedCol) && !aliases.has(normalizedCol)) {
                 return {
                     valid: false,
                     error: `Invalid column detected: ${col}`

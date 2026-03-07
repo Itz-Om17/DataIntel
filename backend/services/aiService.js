@@ -1,12 +1,25 @@
 const axios = require("axios");
+const http = require("http");
 
-const AI_BASE_URL = "http://localhost:8001";
+const AI_BASE_URL = process.env.AI_SERVICE_URL || "http://localhost:8001";
+
+// Create an httpAgent that keeps connections alive and doesn't time out idly
+const httpAgent = new http.Agent({
+    keepAlive: true,
+    timeout: 180000  // 3 minutes socket timeout
+});
+
+const aiAxios = axios.create({
+    baseURL: AI_BASE_URL,
+    timeout: 180000, // 3 minute request timeout (Llama is slow)
+    httpAgent
+});
 
 async function generateSQL(schema, question, tableName) {
-    const response = await axios.post(
-        `${AI_BASE_URL}/generate-sql`,
+    const response = await aiAxios.post(
+        `/generate-sql`,
         {
-            schema,
+            db_schema: schema,
             question,
             table_name: tableName
         }
@@ -16,8 +29,8 @@ async function generateSQL(schema, question, tableName) {
 }
 
 async function generateExplanation(question, result) {
-    const response = await axios.post(
-        `${AI_BASE_URL}/generate-explanation`,
+    const response = await aiAxios.post(
+        `/generate-explanation`,
         {
             question,
             result

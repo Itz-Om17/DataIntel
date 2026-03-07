@@ -1,1 +1,6 @@
-astapi uvicorn requests pydantic
+fastapi
+uvicorn
+requests
+pydantic
+groq
+python-dotenv
