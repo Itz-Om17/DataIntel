@@ -259,7 +259,17 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
   // If no project/session selected, show a placeholder
   if (!projectId || !sessionId) {
     return (
-      <div className="flex-1 flex flex-col bg-[#020617] text-white items-center justify-center p-10">
+      <div className="flex-1 flex flex-col bg-[#020617] text-white items-center justify-center p-10 relative">
+        {/* Mobile Hamburger Header (Visible even when empty) */}
+        <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-transparent z-10 pointer-events-none md:hidden">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="pointer-events-auto bg-[#0f172a]/80 backdrop-blur-md border border-[#1e293b] p-2.5 rounded-xl shadow-lg text-gray-400 hover:text-white transition"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
+
         <Bot className="w-16 h-16 text-[#334155] mb-4" />
         <h2 className="text-xl font-bold text-gray-500">Welcome to DataIntel</h2>
         <p className="text-gray-600 mt-2 text-center max-w-md">
