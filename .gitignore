@@ -34,7 +34,7 @@ uploads/
 *.sqlite
 *.sqlite3
 backend_debug*.log
-*.png
+
 *.webp
 *.jpg
 *.jpeg
