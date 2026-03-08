@@ -3,7 +3,7 @@ import axios from "axios";
 import { askQuestion, getHistory, getDatasets, deleteSession } from "../services/api";
 import ResultCard from "./ResultCard";
 import UploadDataset from "./UploadDataset";
-import { Bot, Database, Square, Send, Loader2, Menu, FileText } from "lucide-react";
+import { Bot, Database, Square, Send, Loader2, Menu, FileText, Mic, MicOff } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -15,10 +15,55 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
   const [failedQuestion, setFailedQuestion] = useState(null); // for retry
 
   const [isExporting, setIsExporting] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
 
   const bottomRef = useRef(null);
   const chatRef = useRef(null);
   const abortControllerRef = useRef(null);
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setQuestion(transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
+
+  const toggleListen = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    } else {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+          setIsListening(true);
+        } catch (e) {
+          console.error("Failed to start recognition:", e);
+        }
+      } else {
+        alert("Speech Recognition is not supported in this browser.");
+      }
+    }
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -365,6 +410,19 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
             disabled={!datasetId}
             className="flex-1 bg-transparent p-3 md:p-4 focus:outline-none text-gray-200 disabled:opacity-50 text-sm md:text-base"
           />
+
+          {!loading && (
+            <button
+              onClick={toggleListen}
+              disabled={!datasetId}
+              className={`p-3 md:p-4 transition flex items-center justify-center border-l border-[#334155] ${
+                isListening ? 'text-rose-500 animate-pulse bg-rose-500/10' : 'text-gray-400 hover:text-white'
+              }`}
+              title={isListening ? "Stop listening" : "Start voice command"}
+            >
+              {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+            </button>
+          )}
 
           {loading ? (
             <button
