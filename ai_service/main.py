@@ -59,4 +59,4 @@ async def generate_explanation_endpoint(req: ExplanationRequest):
 @app.on_event("shutdown")
 async def shutdown_event():
     from model import close_groq_client
-    await close_groq_client()
+    await close_groq_client()
