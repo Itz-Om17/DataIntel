@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import ChatLayout from "./components/ChatLayout";
@@ -13,13 +13,24 @@ function ProtectedRoute({ children, token }) {
 }
 
 function MainApp({ token, handleLogout }) {
-  const [projectId, setProjectId] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
+  const [projectId, setProjectId] = useState(() => localStorage.getItem("activeProjectId") || null);
+  const [sessionId, setSessionId] = useState(() => localStorage.getItem("activeSessionId") || null);
   const [datasetId, setDatasetId] = useState(null);
   const [viewingDatasetId, setViewingDatasetId] = useState(null);
   const [datasetRefreshKey, setDatasetRefreshKey] = useState(0);
   const [sessionRefreshKey, setSessionRefreshKey] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Sync to localStorage
+  useEffect(() => {
+    if (projectId) localStorage.setItem("activeProjectId", projectId);
+    else localStorage.removeItem("activeProjectId");
+  }, [projectId]);
+
+  useEffect(() => {
+    if (sessionId) localStorage.setItem("activeSessionId", sessionId);
+    else localStorage.removeItem("activeSessionId");
+  }, [sessionId]);
 
   return (
     <div className="h-screen flex bg-[#0f172a] text-white overflow-hidden relative">
@@ -37,10 +48,10 @@ function MainApp({ token, handleLogout }) {
         setIsSidebarOpen={setIsSidebarOpen}
       />
       {viewingDatasetId ? (
-        <DatasetReport 
-          datasetId={viewingDatasetId} 
-          token={token} 
-          onClose={() => setViewingDatasetId(null)} 
+        <DatasetReport
+          datasetId={viewingDatasetId}
+          token={token}
+          onClose={() => setViewingDatasetId(null)}
         />
       ) : (
         <ChatLayout
