@@ -162,18 +162,21 @@ export default function Landing({ token }) {
             .li-title { font-size: clamp(36px, 10vw, 60px); }
             .li-sub { font-size: 16px; padding: 0 16px; }
             .li-actions { flex-direction: column; width: 100%; padding: 0 24px; box-sizing: border-box; }
-            .li-actions button, .li-actions a { width: 100%; border-radius: 8px; justify-content: center; display: flex; }
-            .li-termwrap { margin: 40px 16px; width: auto; pointer-events: none; }
-            .li-tline { flex-direction: column; align-items: flex-start; gap: 6px; }
-            .li-stats { grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 16px; padding: 40px 20px; }
-            .li-section { padding: 60px 24px; margin: 40px 16px; }
-            .li-steps { grid-template-columns: 1fr; }
-            .li-step { border-radius: 14px !important; }
+            .li-actions button, .li-actions a { width: 100%; border-radius: 8px; justify-content: center; display: flex; box-sizing: border-box; }
+            .li-termwrap { margin: 40px 16px; width: 100%; max-width: calc(100vw - 32px); pointer-events: none; }
+            .li-termtitle { font-size: 9px; transform: none; white-space: normal; text-align: right; }
+            .li-tline { flex-direction: column; align-items: flex-start; gap: 6px; word-break: break-word; }
+            .li-stats { grid-template-columns: 1fr 1fr; gap: 20px; margin: 40px 16px; padding: 40px 20px; width: auto; max-width: calc(100vw - 32px); box-sizing: border-box; }
+            .li-section { padding: 60px 24px; margin: 40px 0; width: 100%; box-sizing: border-box; overflow: hidden; }
+            .li-steps { grid-template-columns: 1fr; width: 100%; box-sizing: border-box; overflow: hidden; }
+            .li-step { border-radius: 14px !important; width: 100%; box-sizing: border-box; overflow: hidden; word-break: break-word;}
             .li-steparr { display: none; }
-            .li-featgrid { grid-template-columns: 1fr; }
-            .li-cta { margin: 40px 16px; padding: 40px 24px; }
-            .li-ctatitle { font-size: 32px; }
-            .li-footer { flex-direction: column; padding: 24px; text-align: center; }
+            .li-featgrid { grid-template-columns: 1fr; width: 100%; box-sizing: border-box; overflow: hidden; }
+            .li-feat { width: 100%; box-sizing: border-box; overflow: hidden; word-break: break-word; }
+            .li-cta { margin: 40px 16px; padding: 40px 24px; width: auto; max-width: calc(100vw - 32px); box-sizing: border-box; overflow: hidden; }
+            .li-ctatitle { font-size: 32px; word-break: break-word; }
+            .li-ctasub { word-break: break-word; }
+            .li-footer { flex-direction: column; padding: 24px; text-align: center; width: 100%; box-sizing: border-box; overflow: hidden; }
         }
       `}</style>
 
