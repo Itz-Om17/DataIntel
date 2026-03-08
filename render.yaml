@@ -1,0 +1,28 @@
+services:
+  # Node.js Backend Server
+  - type: web
+    name: dataintel-node-backend
+    env: node
+    region: ohio # closest US East to TiDB
+    plan: free
+    buildCommand: "cd backend && npm install"
+    startCommand: "cd backend && node server.js"
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      # We will set the DB credentials securely in the Render dashboard, not here!
+
+  # Python FastAPI Server
+  - type: web
+    name: dataintel-python-ai
+    env: python
+    region: ohio
+    plan: free
+    buildCommand: "cd ai_service && pip install -r requirements.txt"
+    startCommand: "cd ai_service && uvicorn app:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      # We will set GROQ_API_KEY securely in the Render dashboard, not here!
