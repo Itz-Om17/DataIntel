@@ -17,7 +17,10 @@ const app = express();
 // Connect to MongoDB
 connectMongo();
 
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://data-intel.vercel.app'],
+    credentials: true
+}));
 app.use(express.json());
 
 app.use("/auth", authRoute);
