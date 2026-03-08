@@ -11,7 +11,7 @@ export default function Login({ setAuthToken }) {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5000/auth/login", {
+            const res = await axios.post("https://dataintel-node-backend.onrender.com/auth/login", {
                 username,
                 password,
             });

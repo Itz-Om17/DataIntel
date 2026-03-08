@@ -11,7 +11,7 @@ export default function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/auth/register", {
+            const res = await axios.post("https://dataintel-node-backend.onrender.com/auth/register", {
                 username,
                 password,
             });

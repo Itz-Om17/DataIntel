@@ -157,7 +157,7 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/ask",
+        "https://dataintel-node-backend.onrender.com/ask",
         { datasetId, question: questionText, sessionId },
         { headers: { "x-auth-token": token }, signal: controller.signal }
       );
@@ -415,9 +415,8 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
             <button
               onClick={toggleListen}
               disabled={!datasetId}
-              className={`p-3 md:p-4 transition flex items-center justify-center border-l border-[#334155] ${
-                isListening ? 'text-rose-500 animate-pulse bg-rose-500/10' : 'text-gray-400 hover:text-white'
-              }`}
+              className={`p-3 md:p-4 transition flex items-center justify-center border-l border-[#334155] ${isListening ? 'text-rose-500 animate-pulse bg-rose-500/10' : 'text-gray-400 hover:text-white'
+                }`}
               title={isListening ? "Stop listening" : "Start voice command"}
             >
               {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
