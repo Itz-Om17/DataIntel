@@ -280,7 +280,7 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-[#020617] text-white relative">
+    <div className="flex-1 flex flex-col bg-[#020617] text-white relative w-full min-w-0">
 
       {/* Top Bar for Dataset Selection */}
       <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-gradient-to-b from-[#020617] to-transparent z-10 pointer-events-none">
@@ -324,7 +324,7 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
       </div>
 
       {/* Messages Area */}
-      <div id="capture-chat-area" ref={chatRef} className="flex-1 overflow-y-auto overflow-x-hidden p-4 pt-24 md:p-10 md:pt-24 space-y-10 bg-[#020617]">
+      <div id="capture-chat-area" ref={chatRef} className="flex-1 overflow-y-auto overflow-x-hidden p-4 pt-24 md:p-10 md:pt-24 space-y-10 bg-[#020617] w-full min-w-0">
 
         {messages.map((msg, i) => {
           if (msg.type === "user") {
@@ -363,7 +363,7 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
             );
           } else {
             return (
-              <div key={i} className="flex gap-4 mb-10 w-full">
+              <div key={i} className="flex gap-4 mb-10 w-full min-w-0">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-r from-indigo-400 to-blue-500 flex items-center justify-center flex-shrink-0 mt-2 shadow-lg shadow-blue-500/20">
                   <Bot className="w-5 h-5 text-white" />
                 </div>

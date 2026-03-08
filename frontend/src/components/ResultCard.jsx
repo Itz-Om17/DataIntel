@@ -118,7 +118,7 @@ export default function ResultCard({ data }) {
   };
 
   return (
-    <div className="flex flex-col w-full relative group">
+    <div className="flex flex-col w-full relative group min-w-0">
 
       {/* Export Button floating top right */}
       <div className="absolute -top-3 right-0 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -156,7 +156,7 @@ export default function ResultCard({ data }) {
         </div>
       </div>
 
-      <div ref={cardRef} className="flex flex-col space-y-4 w-full bg-[#020617] p-2 -m-2 rounded-xl">
+      <div ref={cardRef} className="flex flex-col space-y-4 w-full bg-[#020617] p-2 -my-2 rounded-xl min-w-0">
 
         {/* ================= ANSWER SECTION ================= */}
         {shortAnswer && (
