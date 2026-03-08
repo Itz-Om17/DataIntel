@@ -331,11 +331,11 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
             const queryIndex = Math.floor(i / 2) + 1;
             const totalQueries = Math.ceil(messages.filter(m => m.type === "user").length);
             return (
-              <div key={i} className="mb-6 flex flex-col items-end">
-                <div className="text-[#334155] font-mono font-semibold text-xs uppercase tracking-widest mb-3 w-full text-left pl-14">
-                  QUERY {queryIndex.toString().padStart(2, '0')} / {totalQueries.toString().padStart(2, '0')} - {msg.text.slice(0, 30)}{msg.text.length > 30 ? '...' : ''}
+              <div key={i} className="mb-6 flex flex-col items-end w-full">
+                <div className="text-[#334155] font-mono font-semibold text-xs uppercase tracking-widest mb-3 w-full text-right">
+                  QUERY {queryIndex.toString().padStart(2, '0')} / {totalQueries.toString().padStart(2, '0')} - {msg.text.slice(0, 20)}{msg.text.length > 20 ? '...' : ''}
                 </div>
-                <div className="bg-[#4338ca] text-[#e0e7ff] font-medium px-5 py-3 rounded-2xl rounded-tr-sm shadow-md text-sm max-w-xl">
+                <div className="bg-[#4338ca] text-[#e0e7ff] font-medium px-5 py-3 rounded-2xl rounded-tr-sm shadow-md text-sm max-w-[85vw] md:max-w-xl break-words">
                   {msg.text}
                 </div>
               </div>

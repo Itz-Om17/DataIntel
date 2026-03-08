@@ -160,14 +160,14 @@ export default function ResultCard({ data }) {
 
         {/* ================= ANSWER SECTION ================= */}
         {shortAnswer && (
-          <div className="rounded-xl overflow-hidden border border-[#052e16] bg-[#020617] shadow-lg">
+          <div className="rounded-xl overflow-hidden border border-[#052e16] bg-[#020617] shadow-lg max-w-full">
             <div className="bg-[#064e3b] px-4 py-2 flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-emerald-400" />
+              <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
               <span className="text-emerald-400 font-bold text-xs tracking-wider">ANSWER</span>
             </div>
-            <div className={`p-4 border-t border-[#064e3b] bg-[#082f49]/20 flex flex-col ${bigNumber ? 'items-center justify-center text-center py-10' : 'items-start justify-start'}`}>
-              {bigNumber && <div className="text-5xl font-extrabold text-[#38bdf8] tracking-tight mb-3 drop-shadow-md">{bigNumber}</div>}
-              <div className={`leading-relaxed whitespace-pre-wrap ${bigNumber ? 'text-gray-400 text-sm' : 'text-gray-300 text-sm'}`}>
+            <div className={`p-4 border-t border-[#064e3b] bg-[#082f49]/20 flex flex-col max-w-full ${bigNumber ? 'items-center justify-center text-center py-10' : 'items-start justify-start'}`}>
+              {bigNumber && <div className="text-5xl font-extrabold text-[#38bdf8] tracking-tight mb-3 drop-shadow-md break-all max-w-full overflow-hidden">{bigNumber}</div>}
+              <div className={`leading-relaxed whitespace-pre-wrap break-words max-w-full ${bigNumber ? 'text-gray-400 text-sm' : 'text-gray-300 text-sm'}`}>
                 {shortAnswer}
               </div>
             </div>
@@ -176,25 +176,25 @@ export default function ResultCard({ data }) {
 
         {/* ================= SQL SECTION ================= */}
         {data.sql && (
-          <div className="rounded-xl overflow-hidden border border-[#3b0764] bg-[#020617] shadow-lg">
+          <div className="rounded-xl overflow-hidden border border-[#3b0764] bg-[#020617] shadow-lg max-w-full">
             <div className="bg-[#4c1d95] px-4 py-2 flex items-center gap-2">
-              <Search className="w-4 h-4 text-purple-300" />
+              <Search className="w-4 h-4 text-purple-300 shrink-0" />
               <span className="text-purple-300 font-bold text-xs tracking-wider">SQL QUERY USED</span>
             </div>
-            <div className="p-4 text-indigo-300 font-mono text-sm overflow-x-auto border-t border-[#4c1d95] bg-[#0f172a]">
-              <pre className="whitespace-pre-wrap">{data.sql}</pre>
+            <div className="p-4 text-indigo-300 font-mono text-xs md:text-sm overflow-x-auto border-t border-[#4c1d95] bg-[#0f172a] max-w-full">
+              <pre className="whitespace-pre-wrap break-all">{data.sql}</pre>
             </div>
           </div>
         )}
 
         {/* ================= EXPLANATION SECTION ================= */}
         {explanation && explanation !== shortAnswer && (
-          <div className="rounded-xl overflow-hidden border border-[#1e3a8a] bg-[#020617] shadow-lg">
+          <div className="rounded-xl overflow-hidden border border-[#1e3a8a] bg-[#020617] shadow-lg max-w-full">
             <div className="bg-[#1e40af]/60 px-4 py-2 flex items-center gap-2">
-              <Lightbulb className="w-4 h-4 text-blue-300" />
+              <Lightbulb className="w-4 h-4 text-blue-300 shrink-0" />
               <span className="text-blue-300 font-bold text-xs tracking-wider">EXPLANATION</span>
             </div>
-            <div className="p-4 text-gray-300 text-sm leading-relaxed border-t border-[#1e3a8a] bg-[#172554]/30 whitespace-pre-wrap">
+            <div className="p-4 text-gray-300 text-sm leading-relaxed border-t border-[#1e3a8a] bg-[#172554]/30 whitespace-pre-wrap break-words max-w-full">
               {explanation}
             </div>
           </div>
@@ -202,12 +202,12 @@ export default function ResultCard({ data }) {
 
         {/* ================= TABLE ================= */}
         {data.data && data.data.length > 0 && (
-          <div className="rounded-xl overflow-hidden border border-[#1e293b] bg-[#020617] shadow-lg">
+          <div className="rounded-xl overflow-hidden border border-[#1e293b] bg-[#020617] shadow-lg max-w-full">
             <div className="bg-[#0f172a] px-4 py-2 flex items-center gap-2 border-b border-[#1e293b]">
-              <TableIcon className="w-4 h-4 text-indigo-400" />
+              <TableIcon className="w-4 h-4 text-indigo-400 shrink-0" />
               <span className="text-indigo-400 font-bold text-xs uppercase tracking-wider">RAW RESULT TABLE</span>
             </div>
-            <div className="p-0 bg-[#0f172a]">
+            <div className="p-0 bg-[#0f172a] max-w-full overflow-x-auto">
               <ResultTable data={data.data} />
             </div>
           </div>
@@ -215,14 +215,18 @@ export default function ResultCard({ data }) {
 
         {/* ================= CHART SECTION ================= */}
         {data.data && data.data.length > 1 && (
-          <div className="rounded-xl overflow-hidden border border-[#1e293b] bg-[#020617] shadow-lg">
+          <div className="rounded-xl overflow-hidden border border-[#1e293b] bg-[#020617] shadow-lg max-w-full">
             <div className="bg-[#0f172a] px-4 py-3 flex items-center gap-2 border-b border-[#1e293b]">
-              <BarChart2 className="w-4 h-4 text-cyan-400" />
+              <BarChart2 className="w-4 h-4 text-cyan-400 shrink-0" />
               <span className="text-cyan-400 font-bold text-xs tracking-wider">VISUALIZATION</span>
             </div>
-            <div className="p-4 bg-[#0f172a]">
+            <div className="p-4 bg-[#0f172a] max-w-full overflow-hidden">
               {/* During PDF export, Recharts animations can cause blank charts, html2canvas catches it better if stable, but React responsive handles it generally well */}
-              <ChartRenderer data={data.data} />
+              <div className="w-full overflow-x-auto">
+                <div className="min-w-[300px]">
+                  <ChartRenderer data={data.data} />
+                </div>
+              </div>
             </div>
           </div>
         )}
