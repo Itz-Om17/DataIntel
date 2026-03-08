@@ -36,3 +36,8 @@ async def generate_explanation_endpoint(req: ExplanationRequest):
     except Exception as e:
         print(f"Explanation generation error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    from model import close_groq_client
+    await close_groq_client()

@@ -186,13 +186,14 @@ router.post("/", authMiddleware, async (req, res) => {
         /* ==============================
            7.5️⃣ Save to MongoDB
         ============================== */
+        const aiResponseString = typeof explanation === 'object' ? JSON.stringify(explanation) : explanation;
         const history = new ChatHistory({
             userId: req.user.id,
             sessionId,
             datasetId,
             question,
             sqlGenerated: generatedSQL,
-            aiResponse: explanation,
+            aiResponse: aiResponseString,
             queryData: rows
         });
         await history.save();
