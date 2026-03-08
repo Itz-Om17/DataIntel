@@ -219,11 +219,12 @@ router.post("/", authMiddleware, async (req, res) => {
 
     } catch (err) {
 
-        console.error("Query Error:", err);
+        console.error("Query Error Details:", err.message, err.stack);
 
         res.status(500).json({
             error: "Query processing failed",
-            details: err.message
+            details: err.message,
+            stack: err.stack
         });
 
     } finally {
