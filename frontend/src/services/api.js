@@ -20,6 +20,8 @@ export const deleteSession = (sessionId, token) => axios.delete(`${API_BASE}/ses
 
 /* ================= Datasets ================= */
 export const getDatasets = (projectId) => axios.get(`${API_BASE}/datasets${projectId ? `?projectId=${projectId}` : ''}`);
+export const getDatasetSummary = (id, token) => axios.get(`${API_BASE}/datasets/${id}/summary`, getHeaders(token));
+export const getDatasetSuggestions = (id, token) => axios.get(`${API_BASE}/datasets/${id}/suggestions`, getHeaders(token));
 export const uploadDataset = (formData, token) => axios.post(`${API_BASE}/upload`, formData, getHeaders(token));
 export const deleteDataset = (id, token) => axios.delete(`${API_BASE}/datasets/${id}`, getHeaders(token));
 

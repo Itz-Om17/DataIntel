@@ -10,6 +10,7 @@ load_dotenv()
 
 from sql_generator import generate_sql
 from explanation_generator import generate_explanation
+from report_generator import suggest_report_relationships
 
 app = FastAPI()
 
@@ -33,6 +34,10 @@ class ExplanationRequest(BaseModel):
     question: str
     result: list
 
+class SuggestReportRequest(BaseModel):
+    schema_str: str
+    sample_data: str
+
 @app.post("/ai/test")
 def test_ai():
     print("hii from AI service 🤖")
@@ -54,6 +59,15 @@ async def generate_explanation_endpoint(req: ExplanationRequest):
         return {"explanation": explanation}
     except Exception as e:
         print(f"Explanation generation error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/suggest-report")
+async def suggest_report_endpoint(req: SuggestReportRequest):
+    try:
+        suggestions = await suggest_report_relationships(req.schema_str, req.sample_data)
+        return {"suggestions": suggestions}
+    except Exception as e:
+        print(f"Report suggestion error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.on_event("shutdown")

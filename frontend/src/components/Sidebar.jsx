@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProjects, createProject, getSessions, createSession, deleteSession, getDatasets, deleteDataset } from "../services/api";
 import UploadDataset from "./UploadDataset";
-import { PlusCircle, MessageSquare, Trash2, Database, CheckCircle, XCircle, AlertTriangle, X } from "lucide-react";
+import { PlusCircle, MessageSquare, Trash2, Database, CheckCircle, XCircle, AlertTriangle, X, Eye, EyeOff } from "lucide-react";
 
 /* ─── Tiny Toast Component ─────────────────────────────── */
 function Toast({ toasts }) {
@@ -100,6 +100,7 @@ export default function Sidebar({
   projectId, setProjectId,
   sessionId, setSessionId,
   setDatasetId,
+  viewingDatasetId, setViewingDatasetId,
   handleLogout, token,
   onDatasetDeleted, sessionRefreshKey,
   isSidebarOpen, setIsSidebarOpen
@@ -160,6 +161,7 @@ export default function Sidebar({
       const res = await createProject(newProjectName, token);
       setProjects([res.data, ...projects]);
       setProjectId(res.data.id);
+      setViewingDatasetId(null); // Return to chat view for new project
       setNewProjectName("");
       setIsCreatingProject(false);
       addToast(`Project "${res.data.name}" created!`);
@@ -172,6 +174,7 @@ export default function Sidebar({
       const res = await createSession(projectId, token);
       setSessions([res.data, ...sessions]);
       setSessionId(res.data._id);
+      setViewingDatasetId(null); // Return to chat view
     } catch { addToast("Failed to create chat", "error"); }
   }
 
@@ -250,7 +253,11 @@ export default function Sidebar({
               <div className="space-y-2">
                 <select
                   value={projectId || ""}
-                  onChange={(e) => setProjectId(e.target.value)}
+                  onChange={(e) => {
+                    setProjectId(e.target.value);
+                    setDatasetId(null); // Clear targeting when switching projects
+                    setViewingDatasetId(null); // Return to chat view
+                  }}
                   className="w-full bg-[#1e293b] border border-[#334155] rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                 >
                   <option value="">-- Choose Project --</option>
@@ -305,6 +312,17 @@ export default function Sidebar({
                           <Database className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
                           <span className="flex-1 truncate text-xs">{d.name}</span>
                           <button
+                            onClick={() => setViewingDatasetId(viewingDatasetId === d.id ? null : d.id)}
+                            className="opacity-0 group-hover:opacity-100 transition text-indigo-400 hover:text-indigo-300 shrink-0 mx-1"
+                            title={viewingDatasetId === d.id ? "Close report" : "View report"}
+                          >
+                            {viewingDatasetId === d.id ? (
+                              <Eye className="w-4 h-4" />
+                            ) : (
+                              <EyeOff className="w-4 h-4" />
+                            )}
+                          </button>
+                          <button
                             onClick={() => setConfirmingDataset(d.id)}
                             className="opacity-0 group-hover:opacity-100 transition text-red-400 hover:text-red-300 shrink-0"
                             title="Delete dataset"
@@ -358,7 +376,10 @@ export default function Sidebar({
                       />
                     ) : (
                       <div
-                        onClick={() => setSessionId(s._id)}
+                        onClick={() => {
+                          setSessionId(s._id);
+                          setViewingDatasetId(null); // Return to chat view
+                        }}
                         className={`group px-3 py-2.5 rounded-lg text-sm cursor-pointer transition flex items-center gap-3
                           ${sessionId === s._id
                             ? 'bg-[#1e293b] text-white border border-[#334155]'

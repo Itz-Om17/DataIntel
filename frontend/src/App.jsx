@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import ChatLayout from "./components/ChatLayout";
+import DatasetReport from "./components/DatasetReport";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Landing from "./pages/Landing";
@@ -15,15 +16,19 @@ function MainApp({ token, handleLogout }) {
   const [projectId, setProjectId] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [datasetId, setDatasetId] = useState(null);
+  const [viewingDatasetId, setViewingDatasetId] = useState(null);
   const [datasetRefreshKey, setDatasetRefreshKey] = useState(0);
   const [sessionRefreshKey, setSessionRefreshKey] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="h-screen flex bg-[#0f172a] text-white overflow-hidden">
+    <div className="h-screen flex bg-[#0f172a] text-white overflow-hidden relative">
       <Sidebar
         projectId={projectId} setProjectId={setProjectId}
         sessionId={sessionId} setSessionId={setSessionId}
+        setDatasetId={setDatasetId}
+        viewingDatasetId={viewingDatasetId}
+        setViewingDatasetId={setViewingDatasetId}
         handleLogout={handleLogout}
         token={token}
         onDatasetDeleted={() => setDatasetRefreshKey(k => k + 1)}
@@ -31,19 +36,27 @@ function MainApp({ token, handleLogout }) {
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
       />
-      <ChatLayout
-        projectId={projectId}
-        sessionId={sessionId}
-        setSessionId={setSessionId}
-        datasetId={datasetId} setDatasetId={setDatasetId}
-        datasetRefreshKey={datasetRefreshKey}
-        token={token}
-        onSessionDeleted={() => {
-          setSessionId(null);
-          setSessionRefreshKey(k => k + 1);
-        }}
-        setIsSidebarOpen={setIsSidebarOpen}
-      />
+      {viewingDatasetId ? (
+        <DatasetReport 
+          datasetId={viewingDatasetId} 
+          token={token} 
+          onClose={() => setViewingDatasetId(null)} 
+        />
+      ) : (
+        <ChatLayout
+          projectId={projectId}
+          sessionId={sessionId}
+          setSessionId={setSessionId}
+          datasetId={datasetId} setDatasetId={setDatasetId}
+          datasetRefreshKey={datasetRefreshKey}
+          token={token}
+          onSessionDeleted={() => {
+            setSessionId(null);
+            setSessionRefreshKey(k => k + 1);
+          }}
+          setIsSidebarOpen={setIsSidebarOpen}
+        />
+      )}
     </div>
   );
 }
