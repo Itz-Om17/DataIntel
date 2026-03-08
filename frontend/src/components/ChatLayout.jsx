@@ -342,11 +342,11 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
             );
           } else if (msg.type === "error") {
             return (
-              <div key={i} className="flex gap-4 mb-6 w-full">
+              <div key={i} className="flex flex-col md:flex-row gap-2 md:gap-4 mb-6 w-full">
                 <div className="w-9 h-9 rounded-full bg-red-500/20 border border-red-500/30 flex items-center justify-center flex-shrink-0 mt-1">
                   <span className="text-red-400 text-sm">✕</span>
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 w-full min-w-0">
                   <div className="bg-red-950/40 border border-red-500/20 rounded-2xl px-5 py-4 text-sm text-red-300">
                     <p className="mb-3">{msg.text}</p>
                     {failedQuestion && (
@@ -363,7 +363,7 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
             );
           } else {
             return (
-              <div key={i} className="flex gap-4 mb-10 w-full min-w-0">
+              <div key={i} className="flex flex-col md:flex-row gap-2 md:gap-4 mb-10 w-full min-w-0">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-r from-indigo-400 to-blue-500 flex items-center justify-center flex-shrink-0 mt-2 shadow-lg shadow-blue-500/20">
                   <Bot className="w-5 h-5 text-white" />
                 </div>
