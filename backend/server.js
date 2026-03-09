@@ -32,6 +32,23 @@ app.use("/projects", projectsRoute);
 app.use("/sessions", sessionsRoute);
 
 const PORT = process.env.PORT || 5000;
+
+// Keep-alive ping for Render
+const cron = require('node-cron');
+const axios = require('axios');
+
+app.get("/ping", (req, res) => res.json({ status: "alive" }));
+
+cron.schedule('*/14 * * * *', async () => {
+    try {
+        const selfUrl = process.env.SELF_URL || `http://localhost:${PORT}`;
+        await axios.get(`${selfUrl}/ping`);
+        console.log('Backend Ping Success');
+    } catch (err) {
+        console.error('Backend Ping Failed', err.message);
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Backend running on port ${PORT}`);
 });

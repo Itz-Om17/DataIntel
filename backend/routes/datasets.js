@@ -92,7 +92,7 @@ router.get("/:id/suggestions", authMiddleware, async (req, res) => {
 
     let schemaStr = schemaRows.map(r => `Col: ${r.column_name}, Type: ${r.data_type}, Sample: ${r.sample_values}`).join("\n");
     const [preview] = await connection.query(`SELECT * FROM \`${dataset[0].table_name}\` LIMIT 3`);
-    
+
     connection.release();
 
     const suggestions = await suggestReport(schemaStr, JSON.stringify(preview));
@@ -119,12 +119,16 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     }
 
     const tableName = rows[0].table_name;
+    const datasetId = req.params.id;
 
-    // Drop the actual data table
+    // 1. Drop the actual data table
     await connection.query(`DROP TABLE IF EXISTS \`${tableName}\``);
 
-    // Remove the datasets record
-    await connection.query("DELETE FROM datasets WHERE id = ?", [req.params.id]);
+    // 2. Remove schema entries first (fix foreign key constraint)
+    await connection.query("DELETE FROM dataset_schema WHERE dataset_id = ?", [datasetId]);
+
+    // 3. Remove the datasets record
+    await connection.query("DELETE FROM datasets WHERE id = ?", [datasetId]);
 
     connection.release();
     res.json({ success: true });

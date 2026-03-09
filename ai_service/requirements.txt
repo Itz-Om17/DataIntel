@@ -6,3 +6,15 @@ pydantic
 pydantic-settings
 axios
 requests
+apscheduler
+pandas
+numpy
+matplotlib
+seaborn
+scipy
+networkx
+contourpy
+torch
+transformers
+SQLAlchemy
+streamlit
