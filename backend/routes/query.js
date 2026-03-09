@@ -7,10 +7,7 @@ const ChatHistory = require("../models/ChatHistory");
 
 const router = express.Router();
 
-// router.post("/", authMiddleware, async (req, res) => {
-router.post("/", async (req, res) => {
-    req.user = { id: 1 }; // Mock user ID for test
-
+router.post("/", authMiddleware, async (req, res) => {
     const connection = await pool.getConnection();
 
     try {
@@ -37,7 +34,6 @@ router.post("/", async (req, res) => {
         );
 
         if (datasetRows.length === 0) {
-            console.warn("Dataset not found in DB. ID:", datasetIdNum);
             return res.status(400).json({
                 error: "Invalid dataset ID"
             });
@@ -55,7 +51,6 @@ router.post("/", async (req, res) => {
         );
 
         if (schemaRows.length === 0) {
-            console.warn("Schema not found in DB. ID:", datasetIdNum);
             return res.status(400).json({
                 error: "Schema not found for dataset"
             });
@@ -136,7 +131,6 @@ router.post("/", async (req, res) => {
         console.log("Validation Result:", validation);
 
         if (!validation.valid) {
-            console.error("SQL Validation Error:", validation.error, "SQL:", generatedSQL);
             return res.status(400).json({
                 error: validation.error
             });
