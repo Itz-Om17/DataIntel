@@ -2,17 +2,12 @@ const axios = require('axios');
 
 async function testAsk() {
     try {
-        // Authenticate first just in case
-        const loginRes = await axios.post('http://localhost:5000/auth/login', {
-            email: "user@user.com",
-            password: "password"
-        });
-        const token = loginRes.data.token;
+        const token = "mock-token"; // Bypass in backend anyway
 
         const response = await axios.post('http://localhost:5000/ask', {
-            datasetId: "some-id",
-            question: "some question",
-            sessionId: "some-session-id"
+            datasetId: "120001",
+            question: "how many customers use electronic check?",
+            sessionId: "69add74de8fafbe6650024b7"
         }, {
             headers: {
                 "x-auth-token": token

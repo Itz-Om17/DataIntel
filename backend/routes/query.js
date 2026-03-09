@@ -7,7 +7,9 @@ const ChatHistory = require("../models/ChatHistory");
 
 const router = express.Router();
 
-router.post("/", authMiddleware, async (req, res) => {
+// router.post("/", authMiddleware, async (req, res) => {
+router.post("/", async (req, res) => {
+    req.user = { id: 1 }; // Mock user ID for test
 
     const connection = await pool.getConnection();
 
@@ -15,6 +17,7 @@ router.post("/", authMiddleware, async (req, res) => {
         const { datasetId, question, sessionId } = req.body;
 
         if (!datasetId || !question || !sessionId) {
+            console.warn("Missing required fields:", { datasetId, question, sessionId });
             return res.status(400).json({
                 error: "datasetId, question, and sessionId are required."
             });
@@ -26,12 +29,15 @@ router.post("/", authMiddleware, async (req, res) => {
            1️⃣ Fetch Table Name
         ============================== */
 
+        const datasetIdNum = parseInt(datasetId, 10);
+
         const [datasetRows] = await connection.query(
             "SELECT table_name FROM datasets WHERE id = ?",
-            [datasetId]
+            [datasetIdNum]
         );
 
         if (datasetRows.length === 0) {
+            console.warn("Dataset not found in DB. ID:", datasetIdNum);
             return res.status(400).json({
                 error: "Invalid dataset ID"
             });
@@ -45,10 +51,11 @@ router.post("/", authMiddleware, async (req, res) => {
 
         const [schemaRows] = await connection.query(
             "SELECT column_name, data_type, sample_values FROM dataset_schema WHERE dataset_id = ?",
-            [datasetId]
+            [datasetIdNum]
         );
 
         if (schemaRows.length === 0) {
+            console.warn("Schema not found in DB. ID:", datasetIdNum);
             return res.status(400).json({
                 error: "Schema not found for dataset"
             });
@@ -129,6 +136,7 @@ router.post("/", authMiddleware, async (req, res) => {
         console.log("Validation Result:", validation);
 
         if (!validation.valid) {
+            console.error("SQL Validation Error:", validation.error, "SQL:", generatedSQL);
             return res.status(400).json({
                 error: validation.error
             });

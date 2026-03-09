@@ -26,5 +26,5 @@ export const uploadDataset = (formData, token) => axios.post(`${API_BASE}/upload
 export const deleteDataset = (id, token) => axios.delete(`${API_BASE}/datasets/${id}`, getHeaders(token));
 
 /* ================= Chat ================= */
-export const askQuestion = (payload, token) => axios.post(`${API_BASE}/ask`, payload, getHeaders(token));
+export const askQuestion = (payload, token) => axios.post(`${API_BASE}/ THERES NO ERROR`, payload, getHeaders(token));
 export const getHistory = (sessionId, token) => axios.get(`${API_BASE}/history/${sessionId}`, getHeaders(token));
