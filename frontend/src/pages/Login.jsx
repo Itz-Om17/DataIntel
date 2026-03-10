@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import toast from "react-hot-toast";
+
 export default function Login({ setAuthToken }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -19,9 +21,12 @@ export default function Login({ setAuthToken }) {
             const token = res.data.token;
             localStorage.setItem("authToken", token);
             setAuthToken(token);
+            toast.success("Welcome back!");
             navigate("/app");
         } catch (err) {
-            setError(err.response?.data?.error || "Login Failed");
+            const errorMsg = err.response?.data?.error || "Login Failed";
+            setError(errorMsg);
+            toast.error(errorMsg);
         }
     };
 

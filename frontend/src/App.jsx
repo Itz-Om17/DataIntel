@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Sidebar from "./components/Sidebar";
 import ChatLayout from "./components/ChatLayout";
 import DatasetReport from "./components/DatasetReport";
@@ -82,6 +83,33 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Toaster 
+        position="top-right" 
+        reverseOrder={false} 
+        toastOptions={{
+          style: {
+            background: '#1e293b',
+            color: '#fff',
+            border: '1px solid #334155',
+          },
+          success: {
+            style: {
+              border: '1px solid #10b981',
+              background: '#064e3b',
+            },
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            style: {
+              border: '1px solid #ef4444',
+              background: '#7f1d1d',
+            },
+          },
+        }}
+      />
       <Routes>
         {/* Landing page — shown first */}
         <Route path="/" element={<Landing token={authToken} />} />

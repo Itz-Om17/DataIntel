@@ -4,27 +4,7 @@ import { getProjects, createProject, getSessions, createSession, deleteSession, 
 import UploadDataset from "./UploadDataset";
 import { PlusCircle, MessageSquare, Trash2, Database, CheckCircle, XCircle, AlertTriangle, X, Eye, EyeOff } from "lucide-react";
 
-/* ─── Tiny Toast Component ─────────────────────────────── */
-function Toast({ toasts }) {
-  return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
-      {toasts.map(t => (
-        <div
-          key={t.id}
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl border text-sm font-medium backdrop-blur-md transition-all duration-300 pointer-events-auto
-            ${t.type === 'success' ? 'bg-emerald-900/80 border-emerald-500/40 text-emerald-300' :
-              t.type === 'error' ? 'bg-red-900/80 border-red-500/40 text-red-300' :
-                'bg-yellow-900/80 border-yellow-500/40 text-yellow-300'}`}
-        >
-          {t.type === 'success' && <CheckCircle className="w-4 h-4 shrink-0" />}
-          {t.type === 'error' && <XCircle className="w-4 h-4 shrink-0" />}
-          {t.type === 'warning' && <AlertTriangle className="w-4 h-4 shrink-0" />}
-          {t.message}
-        </div>
-      ))}
-    </div>
-  );
-}
+import toast from "react-hot-toast";
 
 /* ─── Inline Confirm Row ────────────────────────────────── */
 function InlineConfirm({ message, onConfirm, onCancel }) {
@@ -112,14 +92,13 @@ export default function Sidebar({
   const [isCreatingProject, setIsCreatingProject] = useState(false);
   const [confirmingSession, setConfirmingSession] = useState(null); // session id pending confirm
   const [confirmingDataset, setConfirmingDataset] = useState(null); // dataset id pending confirm
-  const [toasts, setToasts] = useState([]);
   const navigate = useNavigate();
 
-  // ── Toast helpers ─────────────────────────────────────────
+  // ── Toast helpers – now uses global react-hot-toast ────────
   const addToast = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, message, type }]);
-    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
+    if (type === 'success') toast.success(message);
+    else if (type === 'error') toast.error(message);
+    else toast(message);
   }, []);
 
   // ── Data fetching ─────────────────────────────────────────
@@ -202,7 +181,6 @@ export default function Sidebar({
 
   return (
     <>
-      <Toast toasts={toasts} />
 
       {/* Mobile Backdrop Overlay */}
       {isSidebarOpen && (

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
 import axios from "axios";
 import { askQuestion, getHistory, getDatasets, deleteSession } from "../services/api";
 import ResultCard from "./ResultCard";
@@ -60,7 +61,7 @@ export default function ChatLayout({ projectId, sessionId, setSessionId, dataset
           console.error("Failed to start recognition:", e);
         }
       } else {
-        alert("Speech Recognition is not supported in this browser.");
+        toast.error("Speech Recognition is not supported in this browser.");
       }
     }
   };
