@@ -11,7 +11,7 @@ os.environ.pop("HTTPS_PROXY", None)
 os.environ.pop("http_proxy", None)
 os.environ.pop("https_proxy", None)
 
-MODEL_NAME = "llama-3.1-8b-instant"
+MODEL_NAME = "openai/gpt-oss-20b"
 
 _groq_client = None
 
